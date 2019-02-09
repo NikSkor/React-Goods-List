@@ -1,6 +1,31 @@
 import React, { Component } from 'react';
-import style from './List.module.css';
+import './List.css';
+import './../Fonts/fontawesome/css/all.css';
 
+const baseState = [{
+    name:'Плюмбус', 
+    color:'Синий',
+    price:'$10.00', 
+    check: false
+},
+{
+    name:'Портальная пушка', 
+    color:'Зелёный',
+    price:'$666.00', 
+    check: false
+},
+{
+    name:'Степлер', 
+    color:'Чёрный',
+    price:'$1.00', 
+    check: false
+},
+{
+    name:'Чипсы', 
+    color:'Жёлтый',
+    price:'$15.00', 
+    check: false
+}]
 class List extends Component {
     state={
         name:'',
@@ -8,31 +33,44 @@ class List extends Component {
         price:'',
         check: false,
         error: false,
-        data:[]
-    }
+        data: baseState,
+        isOpen: false
+
+    };
+
 
     handleChange = e => {
+        console.log(e.target);
+        // if (e.keyCode > 48 && e.keyCode < 57) {
+        //     this.setState({
+        //         [e.target.name] : e.target.value
+        //     })
+        // }
         this.setState({
             [e.target.name] : e.target.value
         })
         // console.log(e.target);
         // if (e.target.name ==='name' || e.target.name === 'color') {
-        //     if ((e.target.keyCode < 48 || e.target.keyCode > 57) && (e.target.keyCode < 96 || e.target.keyCode > 105 )) {
-        //         e.preventDefault(); 
-        //     } else {
-        //         this.setState({
-        //             [e.target.name] : e.target.value
-        //         })
-        //     }}
-        // } else if (e.target.name==='price') {
-        //     if ((e.keyCode > 48 && e.keyCode < 57) && (e.keyCode > 96 && e.keyCode < 105 )) {
-        //         e.preventDefault();
-        //     } else {
-        //         this.setState({
-        //             [e.target.name] : e.target.value
-        //         })
-        //     }
-        // } 
+ 
+        //     this.setState({
+        //         [e.target.name] : e.target.value
+        //     })
+
+            
+        //         }
+        // console.log(e.target.name);
+        if (e.target.name==='price') {
+            
+            if (e.target.keyCode > 48 || e.target.keyCode < 57) {
+                console.log('Hgj');
+                // e.target.preventDefault();
+                this.setState({
+                    [e.target.name] : e.target.value
+                })
+            } 
+                // e.preventDefault();
+            
+        } 
 
     }
     handleChecked = e => {
@@ -47,6 +85,32 @@ class List extends Component {
             })
         }
     }
+    handleClickRequest = e => {
+        e.preventDefault();
+        (this.state.isOpen === false)
+        ? this.setState({
+            ...this.state,
+            isOpen: true,
+            error: false
+
+        })
+        : this.setState({
+            ...this.state,
+            isOpen: false,
+            error: false
+        })
+    }
+    handleClickErase = e => {
+        e.preventDefault();
+        this.setState({
+            ...this.state,
+            name:'',
+            color:'',
+            price:'',
+            check: false,
+            error: false
+        })
+    }
     handleClick = e => {
         e.preventDefault();
         if (this.state.name !== '' & this.state.color !=='' & this.state.price !=='') {
@@ -55,7 +119,7 @@ class List extends Component {
                 data: [...this.state.data,
                     {name: this.state.name,
                     color: this.state.color,
-                    price: this.state.price,
+                    price: '$'+parseFloat(this.state.price).toFixed(2),
                     check:this.state.check
                     }
                 ],
@@ -63,7 +127,8 @@ class List extends Component {
                 color:'',
                 price:'',
                 check: false,
-                error: false
+                error: false,
+                isOpen: false
             })
         } else {
             this.setState({
@@ -86,15 +151,15 @@ class List extends Component {
         
     } 
     render(){
-
+        let {isOpen} = this.state;
+        let disp;
+        (isOpen === false) ? disp = { display: 'none'} : disp = { display: 'flex'}; 
 
         return(
             <div className="wrapper">
-                <div className="button-block">
-                    <div className={style.button}>Добавить</div>
-                </div>
+                <div className='button' onClick={this.handleClickRequest}>Добавить</div>
                 <div className="container">
-                    <table className={style.table}>
+                    <table className='table'>
                         <tr>
                             <th>Наименование</th>
                             <th>Цвет</th>
@@ -109,53 +174,66 @@ class List extends Component {
                             <td>{elem.price}</td>
                             <td>
                                 <input type="checkbox" name="" id="" checked={elem.check} readOnly/>
-                                <div name='del' index={this.state.data.indexOf(elem)} onClick={this.handleDelete}>X</div>
+                                <div name='del' index={this.state.data.indexOf(elem)} onClick={this.handleDelete}>
+                                    <i class='fa fa-minus-circle icon' aria-hidden="true"></i></div>
                             </td>
                         </tr> 
                         )
 
                         }
                     </table>
-                    <div className="add">
-                        <p>Добавление товара</p>
-                        <p>
-                            <span>Наименование</span>
+                    <div className="add" style={disp}>
+                        <div className="close" onClick={this.handleClickRequest}><i class="fa fa-times-circle icon" aria-hidden="true"></i></div>
+                        <h3>Добавление товара</h3>
+                        <div className='row'>
+                            <span className='text'>Наименование</span>
                             <input type="text"
                             placeholder='Наименование товара'
                             name = 'name'
                             onChange={this.handleChange}
                             value={this.state.name}
+                            className='input'
                             />
-                        </p>
-                        <p>
-                            <span>Цвет</span>
+                        </div>
+                        <div className='row'>
+                            <span className='text'>Цвет</span>
                             <input type="text" 
                             placeholder='Цвет'
                             name='color'
                             onChange={this.handleChange}
                             value={this.state.color}
+                            className='input'
                             />
-                        </p>
-                        <p>
-                            <span>Цена</span>
+                        </div>
+                        <div className='row'>
+                            <span className='text'>Цена</span>
                             <input type="text"
                             placeholder='Цена'
                             name='price'
                             onChange={this.handleChange}
+                            className='input'
                             value={this.state.price}
                             />
-                        </p>
-                        <p>
-                            <span>Наличие</span>
-                            <input type="checkbox" name="check" id="" onChange={this.handleChecked}/>
-                        </p>
+                        </div>
+                        <div className='row'>
+                            <span className='text'>Наличие</span>
+                            <input type="checkbox" 
+                            name="check" 
+                            onChange={this.handleChecked}
+                            className='checkbox'
+                            checked={this.state.check}
+                            />
+                        </div>
                         
+                        <div className="button-block">
+                            <div className='button' onClick={this.handleClick}>Добавить</div>
+                            <div className='button button_add' onClick={this.handleClickErase}>Сброс</div>
+                        </div>
 
-                        <div className={style.button} onClick={this.handleClick}>Добавить</div>
                         {(this.state.error === true) && 
-                            <span>
+                            <div className='error'>
                                 Не все поля заполнены !
-                            </span>}
+                            </div>}
                         
                     </div>
                 </div>
