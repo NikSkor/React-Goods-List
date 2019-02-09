@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './List.css';
 import './../Fonts/fontawesome/css/all.css';
+import img  from './tri.png';
 
 const baseState = [{
     name:'Плюмбус', 
@@ -34,11 +35,11 @@ class List extends Component {
         check: false,
         error: false,
         data: baseState,
-        isOpen: false
+        isOpen: true
 
     };
 
-
+    
     handleChange = e => {
         console.log(e.target);
         // if (e.keyCode > 48 && e.keyCode < 57) {
@@ -157,25 +158,34 @@ class List extends Component {
 
         return(
             <div className="wrapper">
-                <div className='button' onClick={this.handleClickRequest}>Добавить</div>
+                <div className='button button_open' onClick={this.handleClickRequest}>Добавить</div>
                 <div className="container">
                     <table className='table'>
-                        <tr>
-                            <th>Наименование</th>
-                            <th>Цвет</th>
-                            <th>Цена</th>
-                            <th>Наличие</th>
+                        <tr className='table-head'>
+                            <th className='table-name'>Наименование</th>
+                            <th className='table-color'>Цвет</th>
+                            <th className='table-price'>Цена</th>
+                            <th className='head-check'><div>Наличие</div><input type="checkbox" name="" id="" checked={false} readOnly className='tab-check'/></th>
                         </tr>
                         {
                             this.state.data.map(elem =>
-                        <tr key={this.state.data.indexOf(elem)} >    
-                            <td>{elem.name}</td>
-                            <td>{elem.color}</td>
-                            <td>{elem.price}</td>
-                            <td>
+                        <tr key={this.state.data.indexOf(elem)} className='table-row' >    
+                            <td className='table-cell'>
+                                <div className='tab-block'>{elem.name}<div className='table-block'><img src={img} alt='triangle' className='pic'/></div></div>
+                                </td>
+                            <td className='table-cell'>
+                                <div className='tab-block'>{elem.color}<div className='table-block'><img src={img} alt='triangle' className='pic'/></div></div>
+                            </td>
+                            <td className='table-price'>
+                                <div className='tab-block'>{elem.price}<div className='table-block_own'><img src={img} alt='triangle' className='pic'/></div></div>
+                            </td>
+                            <td className='table-check'>
                                 <input type="checkbox" name="" id="" checked={elem.check} readOnly/>
                                 <div name='del' index={this.state.data.indexOf(elem)} onClick={this.handleDelete}>
-                                    <i class='fa fa-minus-circle icon' aria-hidden="true"></i></div>
+                                    <div className="del-icon">
+                                        <i class='fa fa-minus-circle icon' aria-hidden="true"></i>
+                                    </div>
+                                </div>
                             </td>
                         </tr> 
                         )
@@ -184,7 +194,7 @@ class List extends Component {
                     </table>
                     <div className="add" style={disp}>
                         <div className="close" onClick={this.handleClickRequest}><i class="fa fa-times-circle icon" aria-hidden="true"></i></div>
-                        <h3>Добавление товара</h3>
+                        <h3 className='add_title'>Добавление товара</h3>
                         <div className='row'>
                             <span className='text'>Наименование</span>
                             <input type="text"
