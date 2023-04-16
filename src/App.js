@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './app.css';
+import './App.css';
 import List from './Components/list';
 
 const baseState = [{
